@@ -81,7 +81,8 @@ for i in $(echo y | w3m http://$ADDRESS/server-status -dump 2>&1 | grep -E "^[0-
   if [ ! -z "$SKIP_PROC" -a -d /proc/$PID/cwd ]; then
     WORKDIR="Cwd: $(readlink -e /proc/$PID/cwd)"
   fi
-
+  reg='^[0-9]+$'
+  if [[ $PID =~ $reg ]] ; then
   if [ "x$DEBUG" = "x0" ]; then
     if [ "x$SYSLOG" != "x0" ]; then
       echo $KILL_CMD - PID: $i $WORKDIR | logger -p local5.notice -t $0
@@ -91,5 +92,6 @@ for i in $(echo y | w3m http://$ADDRESS/server-status -dump 2>&1 | grep -E "^[0-
     $KILL_CMD $PID
   else
     echo would $KILL_CMD - PID: $i $WORKDIR
+    fi
   fi
 done
